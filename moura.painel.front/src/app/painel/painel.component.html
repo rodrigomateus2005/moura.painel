@@ -1,0 +1,15 @@
+<div class="input-field">
+  <div class="row">
+    <label for="empresa">Empresa:</label>
+  </div>
+  <div class="row">
+    <select id="empresa" appSelect2 [(ngModel)]="linkEmpresa">
+      <optgroup [label]="item.nome" *ngFor="let item of portais">
+        <option [value]="item.link" *ngFor="let empresa of item.empresas">{{empresa.empresa.fantasia}}</option>
+      </optgroup>
+    </select>
+  </div>
+  <div class="row">
+    <button class="btn right" (click)="abrirLink()">Abrir</button>
+  </div>
+</div>

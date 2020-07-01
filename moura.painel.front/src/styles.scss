@@ -1,0 +1,56 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "materialize-css";
+@import "select2";
+
+main > .container {
+  margin-top: 20px;
+}
+
+.card.card-login .card-login-splash {
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex: 1;
+}
+
+.card.card-login {
+  display: flex;
+}
+.card {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+.card {
+  position: relative;
+  margin: 0.5rem 0 1rem 0;
+  background-color: #fff;
+  transition: box-shadow 0.25s;
+  border-radius: 2px;
+}
+
+.card.card-login .card-content {
+  flex: 1;
+}
+
+
+/* Make it a marquee */
+.marquee {
+  width: 20px;
+  margin: 0 auto;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  animation: marquee 2s linear infinite;
+  display: inline-block;
+}
+
+/* Make it move */
+@keyframes marquee {
+  0%   { text-indent: 5em }
+  100% { text-indent: -1em }
+}

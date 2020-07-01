@@ -1,0 +1,22 @@
+<div class="card card-login">
+  <div class="card-login-splash">
+    <img src="assets/LUPO.png" alt="">
+  </div>
+  <div class="card-content">
+    <span class="card-title">Log In</span>
+    <div class="input-field">
+      <input id="username" type="text" class="validate" required [(ngModel)]="usuario">
+      <label for="username">Usuário</label>
+    </div>
+    <div class="input-field">
+      <input id="password" type="password" class="validate" required [(ngModel)]="senha">
+      <label for="password">Senha</label>
+    </div>
+    <br><br>
+    <div>
+      <button class="btn right" type="button" (click)="logar()">
+        Logar
+      </button>
+    </div>
+  </div>
+</div>
