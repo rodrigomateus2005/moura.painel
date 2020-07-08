@@ -46,13 +46,17 @@ namespace moura.painel.Controllers
         // POST api/values
         [HttpPost("Login")]
         [AllowAnonymous()]
-        public string Login([FromBody] Login login)
+        public ActionResult<Login> Login([FromBody] Login login)
         {
-            var loginValidos = this.loginService.Logar(login.Usuario, login.Senha);
+            var portais = this.service.GetPortais();
+
+            var loginValidos = this.loginService.Logar(portais,  login.Usuario, login.Senha);
 
             if (loginValidos != null)
             {
-                return this.tokenService.GerarToken(loginValidos);
+                this.Response.Headers.Add("X-Token", new Microsoft.Extensions.Primitives.StringValues(this.tokenService.GerarToken(loginValidos)));
+
+                return Ok(loginValidos);
             }
 
             return null;

@@ -8,6 +8,6 @@ namespace moura.painel.Services
 {
     public interface ILoginRepository
     {
-        Login Logar(string usuario, string senha);
+        Login Logar(Painel_Portal[] paineis, string usuario, string senha);
     }
 }

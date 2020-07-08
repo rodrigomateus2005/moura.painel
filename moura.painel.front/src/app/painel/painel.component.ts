@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { PainelApiService, Portal } from '../painel-api.service';
+import { PainelApiService, Portal, PortalEmpresa } from '../painel-api.service';
 import { HttpClient } from '@angular/common/http';
 
-import * as $ from 'jquery';
 import { CarregandoService } from '../components/carregando/carregando.service';
 
 @Component({
@@ -12,7 +11,7 @@ import { CarregandoService } from '../components/carregando/carregando.service';
 })
 export class PainelComponent implements OnInit {
 
-  public linkEmpresa: string;
+  public empresa: PortalEmpresa;
 
   public portais: Portal[];
 
@@ -31,40 +30,22 @@ export class PainelComponent implements OnInit {
   constructor(private service: PainelApiService, private carregandoService: CarregandoService) { }
 
   ngOnInit(): void {
-    const carregando = this.carregandoService.getInstance();
-
-    carregando.abrir();
-
     this.service.getPortais().then((result) => {
       this.portais = result;
 
-      if (this.portais && this.portais.length > 0) {
-        this.linkEmpresa =  this.portais[0].link;
+      if (this.portais && this.portais.length > 0 && this.portais[0].empresas.length > 0) {
+        this.empresa =  this.portais[0].empresas[0];
       }
-
-      carregando.fechar();
     }).catch((err) => {
     });
   }
 
   abrirLink() {
-    this.service.abrirPortal(this.linkEmpresa);
-    // $.get(this.linkEmpresa).then((e) => {
-    //   $.post(this.linkEmpresa + '/api/Login/Login', {
-    //         usuario: 'moura',
-    //         senha: '886648',
-    //         empresaSelecionada: 0
-    //       }).then((result) => {
-    //         console.log(result);
+    const portal = this.empresa.portal;
 
-    //         window.location.href = this.linkEmpresa;
-
-    //       }).catch((err) => {
-    //         console.error(err);
-    //       });
-    // }).catch((e) => {
-    //   console.error(e);
-    // });
+    if (portal) {
+      this.service.abrirPortal(portal.link, this.empresa.codigo);
+    }
   }
 
 }

@@ -40,27 +40,16 @@ namespace moura.painel.NHibernate.Maps
 
             //Bag(x => x.Empresas, map =>
             //{
+            //    // map.Inverse(true);
             //    map.Key(key => key.Column("Portal"));
             //    map.Lazy(CollectionLazy.NoLazy);
+            //    map.Cascade(Cascade.None);
             //    map.Fetch(CollectionFetchMode.Select);
 
             //}, rel =>
             //{
             //    rel.OneToMany();
             //});
-
-            Bag(x => x.Empresas, map =>
-            {
-                // map.Inverse(true);
-                map.Key(key => key.Column("Portal"));
-                map.Lazy(CollectionLazy.NoLazy);
-                map.Cascade(Cascade.None);
-                map.Fetch(CollectionFetchMode.Select);
-
-            }, rel =>
-            {
-                rel.OneToMany();
-            });
         }
 
     }

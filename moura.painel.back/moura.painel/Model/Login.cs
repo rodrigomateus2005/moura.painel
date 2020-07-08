@@ -9,6 +9,6 @@ namespace moura.painel.Model
     {
         public string Usuario { get; set; }
         public string Senha { get; set; }
-        public string HashServidor { get; set; }
+        public Painel_Portal[] Paineis { get; set; }
     }
 }

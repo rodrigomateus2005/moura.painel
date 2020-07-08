@@ -9,25 +9,15 @@ import { NgModel } from '@angular/forms';
 })
 export class Select2Directive implements OnInit {
 
-  // @ViewChild(NgModel)
-  // private $ngModel: NgModel;
-  // public get ngModel(): NgModel {
-  //   return this.$ngModel;
-  // }
-  // public set ngModel(value: NgModel) {
-  //   this.$ngModel = value;
-
-  //   if (value) {
-  //     value.valueChanges.subscribe((v) => {
-  //       this.onValueChanged(v);
-  //     });
-  //   }
-  // }
-
   private instanceCombo: any;
 
-  constructor(private element: ElementRef,
-              @Optional() private ngModel: NgModel) {
+  private get selectElement(): HTMLSelectElement {
+    return this.element.nativeElement;
+  }
+
+  constructor(
+    private element: ElementRef,
+    @Optional() private ngModel: NgModel) {
 
     if (ngModel) {
       ngModel.valueChanges.subscribe((v) => {
@@ -53,7 +43,11 @@ export class Select2Directive implements OnInit {
 
   public onValueChanged(value: any) {
     if (this.instanceCombo) {
-      this.instanceCombo.val(value).trigger('change');
+      if (this.selectElement.selectedOptions && this.selectElement.selectedOptions.length > 0) {
+        this.instanceCombo.val(this.selectElement.selectedOptions[0].value).trigger('change');
+      } else {
+        this.instanceCombo.val(null).trigger('change');
+      }
     }
   }
 

@@ -2,6 +2,15 @@ import { Injectable, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { APP_BASE_HREF, PlatformLocation } from '@angular/common';
 
+import * as $ from 'jquery';
+import { CarregandoService } from './components/carregando/carregando.service';
+
+export interface Login {
+  usuario: string;
+  senha: string;
+  paineis: Portal[];
+}
+
 export interface Empresa {
   codigo: number;
   razao_Social: string;
@@ -10,6 +19,7 @@ export interface Empresa {
 
 export interface PortalEmpresa {
   codigo: number;
+  portal: Portal;
   empresa: Empresa;
 }
 
@@ -26,7 +36,9 @@ export interface Portal {
 export class PainelApiService {
 
   private urlApi = 'https://localhost:44336/';
+
   private bearerToken: string;
+  private login: Login;
 
   public get isLogado(): boolean {
     if (this.bearerToken) {
@@ -35,23 +47,21 @@ export class PainelApiService {
     return false;
   }
 
-  constructor(private http: HttpClient, platformLocation: PlatformLocation) {
-    // this.urlApi = (platformLocation as any).location.origin;
-    // console.log(this.urlApi);
-    // console.log((platformLocation as any).location);
-
+  constructor(private http: HttpClient, platformLocation: PlatformLocation, private carregandoService: CarregandoService) {
     this.urlApi = '';
   }
 
-  public logar(usuario: string, senha: string): Promise<boolean> {
-    return new Promise<boolean>((resolve, reject) => {
-      this.http.post(this.urlApi + 'api/Painel/Login', {
+  public logar(usuario: string, senha: string): Promise<Login> {
+    return new Promise<Login>((resolve, reject) => {
+      this.http.post<Login>(this.urlApi + 'api/Painel/Login', {
         Usuario: usuario,
         Senha: senha
-      }, { responseType: 'text' }).toPromise().then((result) => {
-        if (result) {
-          this.bearerToken = result;
-          resolve(true);
+      },
+      {observe: 'response'}).toPromise().then((result) => {
+        if (result.ok) {
+          this.bearerToken = result.headers.get('X-Token');
+          this.login = result.body;
+          resolve(result.body);
         } else {
           reject('Usuário ou senha incorretos');
         }
@@ -62,17 +72,13 @@ export class PainelApiService {
   }
 
   public getPortais(): Promise<Portal[]> {
-    return new Promise<Portal[]>((resolve, reject) => {
-      this.http.get<Portal[]>(this.urlApi + 'api/Painel/RetornarEmpresas', {
-        headers: {
-          Authorization: `Bearer ${this.bearerToken}`
-        }
-      }).toPromise().then((result) => {
-        resolve(result);
-      }).catch((err) => {
-        reject(err);
-      });
-    });
+    for (const portal of this.login.paineis) {
+      for (const empresa of portal.empresas) {
+        empresa.portal = portal;
+      }
+    }
+
+    return Promise.resolve(this.login.paineis);
 
     // return Promise.resolve([
     //   {
@@ -93,13 +99,26 @@ export class PainelApiService {
     // ]);
   }
 
-  public abrirPortal(link: string) {
-    // this.http.get(link).toPromise().then((result) => {
-    //   console.log(result);
-    // }).catch((err) => {
-    // });
+  public abrirPortal(link: string, empresa: number) {
+    const carregando = this.carregandoService.getInstance();
+    carregando.abrir();
 
-    window.location.href = link;
+    $.get(link).then((e) => {
+      $.post(link + '/api/Login/Login', {
+            usuario: this.login.usuario,
+            senha: this.login.senha,
+            empresaSelecionada: empresa
+          }).then((result) => {
+            carregando.fechar();
+            window.location.href = link + '?X-Token=' + result.token;
+          }).catch((err) => {
+            carregando.fechar();
+            console.error(err);
+          });
+    }).catch((e) => {
+      carregando.fechar();
+      console.error(e);
+    });
   }
 
 }

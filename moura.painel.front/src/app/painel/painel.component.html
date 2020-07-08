@@ -3,9 +3,9 @@
     <label for="empresa">Empresa:</label>
   </div>
   <div class="row">
-    <select id="empresa" appSelect2 [(ngModel)]="linkEmpresa">
+    <select id="empresa" appSelect2 [(ngModel)]="empresa">
       <optgroup [label]="item.nome" *ngFor="let item of portais">
-        <option [value]="item.link" *ngFor="let empresa of item.empresas">{{empresa.empresa.fantasia}}</option>
+        <option [ngValue]="emp" *ngFor="let emp of item.empresas">{{emp.empresa.fantasia}}</option>
       </optgroup>
     </select>
   </div>

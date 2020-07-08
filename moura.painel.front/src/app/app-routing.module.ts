@@ -6,8 +6,8 @@ import { RotaLogadaGuard } from './rota-logada.guard';
 
 
 const routes: Routes = [
-  { path: 'painel', component: PainelComponent },
-  // { path: 'login', component: LoginComponent },
+  { path: 'painel', component: PainelComponent, canActivate: [RotaLogadaGuard] },
+  { path: 'login', component: LoginComponent },
   { path: '**', redirectTo: '/painel', pathMatch: 'full' },
 ];
 

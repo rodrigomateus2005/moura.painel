@@ -19,7 +19,6 @@ export class CarregandoService {
   constructor(
     private applicationRef: ApplicationRef,
     private componentFactoryResolver: ComponentFactoryResolver) {
-    console.log(this.applicationRef);
   }
 
   public getInstance(): ICarregandoRef {

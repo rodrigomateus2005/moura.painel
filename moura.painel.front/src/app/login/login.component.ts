@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import * as M from 'materialize-css';
 import { Router } from '@angular/router';
 import { PainelApiService } from '../painel-api.service';
+import { CarregandoService } from '../components/carregando/carregando.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   public usuario: string;
   public senha: string;
 
-  constructor(private router: Router, private service: PainelApiService) { }
+  constructor(private router: Router, private service: PainelApiService, private carregandoService: CarregandoService) { }
 
   ngOnInit(): void {
   }
@@ -30,9 +31,15 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    const carregando = this.carregandoService.getInstance();
+
+    carregando.abrir();
+
     this.service.logar(this.usuario, this.senha).then(response => {
+      carregando.fechar();
       this.router.navigate(['painel']);
     }).catch(err => {
+      carregando.fechar();
       M.toast({html: 'Usuário ou senha incorretos'});
     });
   }
